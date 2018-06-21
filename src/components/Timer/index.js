@@ -3,15 +3,38 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import './timer.css'
 
+let taskListStorage = JSON.parse(localStorage.getItem('tasks'));
+
+let secondStorage   = localStorage.getItem('seconds');
+let minutesStorage  = localStorage.getItem('minutes');
+let hoursStorage    = localStorage.getItem('hours');
+let isActiveStorage = localStorage.getItem('isActive');
+let taskStartTime = localStorage.getItem('taskStartTime');
+
 class Timer extends Component {
 
   state = {
-    isActive: false,
+    isActive: isActiveStorage ? JSON.parse(isActiveStorage) : false,
+    timerID: null,
 
-    seconds: '00',
-    minutes: '00',
-    hours  : '00'
+    seconds: secondStorage ? secondStorage : '00',
+    minutes: minutesStorage ? minutesStorage : '00',
+    hours  : hoursStorage  ? hoursStorage : '00',
+
+    // TODO Разедить Task и Timer ?
+    taskList: taskListStorage ? taskListStorage : [],
+    taskTitle: '',
+    taskStartTime: taskStartTime ? taskStartTime : '',
+    taskEndTime: '',
+    taskTime: ''
   };
+
+  componentWillMount() {
+    if(this.state.isActive === true) {
+      console.log('start');
+      this.startTimer();
+    }
+  }
 
   render() {
     return (
@@ -20,21 +43,78 @@ class Timer extends Component {
           label="Name of your task"
           fullWidth={true}
           margin="normal"
+          value={this.state.taskTitle}
+          onChange={this.changeTaskTitle}
         />
         <div className="timer__body">
           {this.state.hours}:
           {this.state.minutes}:
           {this.state.seconds}
         </div>
-        <Button variant="outlined" onClick={this.activateTimer}>
-          {this.state.isActive ? 'Stop' : 'Start'}
-        </Button>
+
+        {this.state.isActive ?
+          <Button variant="outlined" onClick={this.stopTimer}>Stop</Button>
+          :
+          <Button variant="outlined" onClick={this.activateTimer}>Start</Button>
+        }
       </div>
     );
   }
 
-  formatingNubmers = (number) => {
+  formatNubmer = (number) => {
     return (number < 10 ? '0' : '') + number
+  };
+
+  changeTaskTitle = (event) => {
+    this.setState({taskTitle: event.target.value})
+  };
+
+  createTask = (taskTitle) => {
+
+    let nextId = taskListStorage ? taskListStorage[taskListStorage.length - 1].id + 1 : 0;
+    let endTask = new Date();
+    let taskTime = Date.parse(endTask) - Date.parse(this.state.taskStartTime);
+    taskTime /= 1000;
+
+    let seconds = Math.round(taskTime % 60);
+    if(seconds < 10) {
+      seconds = '0' + seconds
+    }
+
+    taskTime = Math.floor(taskTime / 60);
+    let minutes = Math.round(taskTime % 60);
+    if(minutes < 10) {
+      minutes = '0' + minutes
+    }
+
+    taskTime = Math.floor(taskTime / 60);
+    let hours = Math.round(taskTime % 24);
+    if(hours < 10) {
+      hours = '0' + hours
+    }
+
+    let totalTimeSpend =  hours + ':' + minutes + ':' + seconds;
+
+    return {
+      id: nextId,
+      title: taskTitle,
+      start: this.state.taskStartTime,
+      end: endTask,
+      timeSpend: totalTimeSpend
+    }
+  };
+
+  activateTimer = () => {
+
+    let startTask = new Date();
+    localStorage.setItem('isActive', true);
+    localStorage.setItem('taskStartTime', startTask);
+
+    this.setState({
+      isActive: true,
+      timerID: this.startTimer(),
+      taskStartTime: startTask
+    });
   };
 
   startTimer = () => {
@@ -42,57 +122,71 @@ class Timer extends Component {
 
     let timerID = setInterval(() => {
 
+      let seconds = this.formatNubmer(+this.state.seconds + 1);
+      localStorage.setItem('seconds', seconds);
+
       this.setState({
-        seconds: this.formatingNubmers(+this.state.seconds + 1)
+        seconds: seconds
       });
 
-      if(+this.state.seconds > 60) {
+      if(+this.state.seconds > 59) {
+
+        let minutes = this.formatNubmer(+this.state.minutes + 1);
+        localStorage.setItem('minutes', minutes);
 
         this.setState({
-          seconds: '01',
-          minutes: this.formatingNubmers(+this.state.minutes + 1)
+          seconds: '00',
+          minutes: minutes
         })
       }
 
-      if(+this.state.minutes > 60) {
+      if(+this.state.minutes > 59) {
+
+        let hours = this.formatNubmer(+this.state.hours + 1);
+        localStorage.setItem('minutes', hours);
 
         this.setState({
-          minutes: '01',
-          hours: this.formatingNubmers(+this.state.hours + 1)
+          minutes: '00',
+          hours: hours
         })
       }
 
     }, timerSpeed);
 
+    localStorage.setItem('timderID', timerID);
     return timerID;
   };
 
-  stopTimer = (timerId) => {
-    clearInterval(timerId);
+
+  stopTimer = () => {
+
+    let task = this.createTask(this.state.taskTitle);
+    this.state.taskList.push(task);
+
+    let strData = JSON.stringify(this.state.taskList);
+    localStorage.setItem('tasks', strData);
+
+    localStorage.removeItem('seconds');
+    localStorage.removeItem('minutes');
+    localStorage.removeItem('hours');
+
+    localStorage.removeItem('isActive');
 
     this.setState({
-      seconds: this.formatingNubmers(0),
-      minutes: this.formatingNubmers(0),
-      hours: this.formatingNubmers(0)
+      isActive: false,
+      seconds: this.formatNubmer(0),
+      minutes: this.formatNubmer(0),
+      hours: this.formatNubmer(0),
+      taskTitle: ''
     });
+
+    let timerIDStorage = localStorage.getItem('timderID');
+    let TimerID = timerIDStorage ? timerIDStorage : this.state.timerID;
+
+    clearInterval(TimerID);
   };
 
-  activateTimer = () => {
 
-    this.setState({
-      isActive: !this.state.isActive
-    });
-
-    if(!this.state.isActive) { // TODO Как правильно проверить состояние после его изменеия ?
-
-      this.setState({
-        timerID: this.startTimer()
-      });
-
-    } else {
-      this.stopTimer(this.state.timerID)
-    }
-  }
 }
 
 export default Timer;
