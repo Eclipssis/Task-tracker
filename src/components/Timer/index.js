@@ -1,44 +1,50 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import DialogAlert from '../DialogAlert'
 import './timer.css'
 
-let taskListStorage = JSON.parse(localStorage.getItem('tasks'));
 
-let secondStorage   = localStorage.getItem('seconds');
-let minutesStorage  = localStorage.getItem('minutes');
-let hoursStorage    = localStorage.getItem('hours');
-let isActiveStorage = localStorage.getItem('isActive');
-let taskStartTime = localStorage.getItem('taskStartTime');
+let taskListStorage      = JSON.parse(localStorage.getItem('tasks'));
+
+let secondStorage        = localStorage.getItem('seconds');
+let minutesStorage       = localStorage.getItem('minutes');
+let hoursStorage         = localStorage.getItem('hours');
+let isActiveStorage      = localStorage.getItem('isActive');
+let taskTitleStorage     = localStorage.getItem('taskTitle');
+let taskStartTimeStorage = localStorage.getItem('taskStartTime');
 
 class Timer extends Component {
 
   state = {
-    isActive: isActiveStorage ? JSON.parse(isActiveStorage) : false,
-    timerID: null,
+    isActive : isActiveStorage ? JSON.parse(isActiveStorage) : false,
+    timerID  : null,
 
-    seconds: secondStorage ? secondStorage : '00',
-    minutes: minutesStorage ? minutesStorage : '00',
-    hours  : hoursStorage  ? hoursStorage : '00',
+    seconds : secondStorage ? secondStorage : '00',
+    minutes : minutesStorage ? minutesStorage : '00',
+    hours   : hoursStorage  ? hoursStorage : '00',
 
     // TODO Разедить Task и Timer ?
-    taskList: taskListStorage ? taskListStorage : [],
-    taskTitle: '',
-    taskStartTime: taskStartTime ? taskStartTime : '',
-    taskEndTime: '',
-    taskTime: ''
+    taskList      : taskListStorage ? taskListStorage : [],
+    taskTitle     : taskTitleStorage ? taskTitleStorage : '',
+    taskStartTime : taskStartTimeStorage ? taskStartTimeStorage : '',
+    taskEndTime   : '',
+    taskTime      : ''
   };
 
   componentWillMount() {
-    if(this.state.isActive === true) {
-      console.log('start');
-      this.startTimer();
-    }
+    if(this.state.isActive === true) this.startTimer();
   }
 
   render() {
     return (
       <div className="timer">
+        <DialogAlert
+          ref="dialog"
+          dialogTitle='Empty task name'
+          dialogText='You are trying close your task without name, enter the title and try again'
+          classesName='dialog-title-red'
+        />
         <TextField
           label="Name of your task"
           fullWidth={true}
@@ -106,9 +112,15 @@ class Timer extends Component {
 
   activateTimer = () => {
 
+    if(this.state.taskTitle.length < 1) {
+      this.refs.dialog.handleClickOpen();
+      return false;
+    }
+
     let startTask = new Date();
     localStorage.setItem('isActive', true);
     localStorage.setItem('taskStartTime', startTask);
+    localStorage.setItem('taskTitle', this.state.taskTitle);
 
     this.setState({
       isActive: true,
@@ -171,6 +183,7 @@ class Timer extends Component {
     localStorage.removeItem('hours');
 
     localStorage.removeItem('isActive');
+    localStorage.removeItem('taskTitle');
 
     this.setState({
       isActive: false,

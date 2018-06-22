@@ -8,6 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+
+
 import Button from '@material-ui/core/Button';
 //import Timer from '../Timer'
 
@@ -69,7 +71,7 @@ class TaskList extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map(task => {
+            {data.map((task, index) => {
               return (
                 <TableRow key={task.id}>
                   <TableCell component="th" scope="row">
@@ -88,7 +90,7 @@ class TaskList extends Component {
                   </TableCell>
                   <TableCell>
 
-                    <Button variant="outlined" onClick={this.deleteTask}>
+                    <Button variant="outlined" id={index} onClick={this.deleteTask}>
                       Delete
                     </Button>
 
@@ -106,8 +108,8 @@ class TaskList extends Component {
 
   };
 
-  deleteTask = () => {
-
+  deleteTask = (event) => {
+    console.log(event.target)
   };
 
 }

@@ -5,24 +5,15 @@ import TaskList from "./components/TaskList";
 
 // TODO вынести куда то нужно
 Date.prototype.getFullSeconds = function () {
-  if (this.getSeconds() < 10) {
-    return '0' + this.getSeconds();
-  }
-  return this.getSeconds();
+  return this.getSeconds() < 10 ? '0' + this.getSeconds() : this.getSeconds();
 };
 
 Date.prototype.getFullMinutes = function () {
-  if (this.getMinutes() < 10) {
-    return '0' + this.getMinutes();
-  }
-  return this.getMinutes();
+  return this.getMinutes() < 10 ? '0' + this.getMinutes() : this.getMinutes();
 };
 
 Date.prototype.getFullHours = function () {
-  if (this.getHours() < 10) {
-    return '0' + this.getHours();
-  }
-  return this.getHours();
+  return this.getHours() < 10 ? '0' + this.getHours() : this.getHours();
 };
 
 
