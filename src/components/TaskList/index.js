@@ -11,6 +11,7 @@ import Paper from '@material-ui/core/Paper';
 
 
 import Button from '@material-ui/core/Button';
+import {connect} from "react-redux";
 //import Timer from '../Timer'
 
 function formatTime(date) {
@@ -24,28 +25,18 @@ function formatTime(date) {
 const styles = theme => ({
   root: {
     width: 1200,
-    marginTop: theme.spacing.unit * 3,
     overflowX: 'auto',
-    margin: '0 auto'
+    margin: '0 auto',
+    padding: '0'
   },
   table: {
     minWidth: 700,
   },
 });
 
-// let id = 0;
-// function createData(title, start, end, timeSpend) {
-//   id += 1;
-//   return {id, title, start, end, timeSpend };
-// }
 
-// const data = [
-//   createData('Create timer', '11:32:10', '12:32:15', '01:00:05', 4.0),
-//   createData('Add tasks to app', '01:15:15', '01:30:35', '00:15:25', 4.3),
-// ];
-
-let data = localStorage.getItem('tasks');
-data = JSON.parse(data) ? JSON.parse(data) : [];
+// let data = localStorage.getItem('tasks');
+// data = JSON.parse(data) ? JSON.parse(data) : this.props.taskList;
 
 class TaskList extends Component {
 
@@ -55,8 +46,9 @@ class TaskList extends Component {
 
   render() {
     const { classes } = this.props;
-    return (
+    const data = this.props.taskList;
 
+    return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
           <TableHead>
@@ -73,9 +65,9 @@ class TaskList extends Component {
           <TableBody>
             {data.map((task, index) => {
               return (
-                <TableRow key={task.id}>
+                <TableRow key={index}>
                   <TableCell component="th" scope="row">
-                    {task.id + 1}
+                    {task.id}
                   </TableCell>
                   <TableCell>{task.title}</TableCell>
                   <TableCell>{formatTime(task.start)}</TableCell>
@@ -90,7 +82,7 @@ class TaskList extends Component {
                   </TableCell>
                   <TableCell>
 
-                    <Button variant="outlined" id={index} onClick={this.deleteTask}>
+                    <Button variant="outlined" onClick={() => this.deleteTask(task.id)} >
                       Delete
                     </Button>
 
@@ -104,14 +96,25 @@ class TaskList extends Component {
     );
   }
 
-  showTask = () => {
-
+  showTask = (id) => {
+    console.log(id);
   };
 
-  deleteTask = (event) => {
-    console.log(event.target)
+  deleteTask = (id) => {
+    // console.log(this.props.taskList);
+    this.props.onDeleteTask(id);
   };
 
 }
 
-export default withStyles(styles)(TaskList);
+
+export default withStyles(styles)(connect(
+  state => ({
+    taskList: state
+  }),
+  dispatch => ({
+    onDeleteTask: (id) => {
+      dispatch({ type: 'DELETE_TASK', payload: id})
+    }
+  })
+)(TaskList));

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
+
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import DialogAlert from '../DialogAlert'
 import './timer.css'
 
-
-let taskListStorage      = JSON.parse(localStorage.getItem('tasks'));
 
 let secondStorage        = localStorage.getItem('seconds');
 let minutesStorage       = localStorage.getItem('minutes');
@@ -25,7 +25,7 @@ class Timer extends Component {
     hours   : hoursStorage  ? hoursStorage : '00',
 
     // TODO Разедить Task и Timer ?
-    taskList      : taskListStorage ? taskListStorage : [],
+    //taskList      : taskListStorage ? taskListStorage : [],
     taskTitle     : taskTitleStorage ? taskTitleStorage : '',
     taskStartTime : taskStartTimeStorage ? taskStartTimeStorage : '',
     taskEndTime   : '',
@@ -37,6 +37,7 @@ class Timer extends Component {
   }
 
   render() {
+
     return (
       <div className="timer">
         <DialogAlert
@@ -77,7 +78,9 @@ class Timer extends Component {
 
   createTask = (taskTitle) => {
 
-    let nextId = taskListStorage ? taskListStorage[taskListStorage.length - 1].id + 1 : 0;
+
+    let nextId = this.props.store.length > 0 ? this.props.store.length + 1 : 1;
+
     let endTask = new Date();
     let taskTime = Date.parse(endTask) - Date.parse(this.state.taskStartTime);
     taskTime /= 1000;
@@ -173,10 +176,12 @@ class Timer extends Component {
   stopTimer = () => {
 
     let task = this.createTask(this.state.taskTitle);
-    this.state.taskList.push(task);
+    this.props.onAddTask(task);
 
-    let strData = JSON.stringify(this.state.taskList);
-    localStorage.setItem('tasks', strData);
+
+    // this.state.taskList.push(task);
+    // let strData = JSON.stringify(this.state.taskList);
+    // localStorage.setItem('tasks', strData);
 
     localStorage.removeItem('seconds');
     localStorage.removeItem('minutes');
@@ -202,4 +207,13 @@ class Timer extends Component {
 
 }
 
-export default Timer;
+export default connect(
+  state => ({
+    store: state
+  }),
+  dispatch => ({
+    onAddTask: (task) => {
+      dispatch({ type: 'ADD_TASK', payload: task})
+    }
+  })
+)(Timer);
