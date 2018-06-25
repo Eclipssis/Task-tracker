@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import TaskList from "../TaskList";
 import TaskChart from "../TaskChart";
 
+//import { Link } from 'react-router-dom'
+
 function TabContainer(props) {
   return (
     <Typography component="div" style={{ padding: 0 }}>
@@ -45,8 +47,9 @@ class TaskBlock extends Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Tabs value={value} onChange={this.handleChange} className={classes.tabsRoot}>
+            {/*<Tab label="TASK LOG" component={Link} to={'/lala'} />*/}
             <Tab label="TASK LOG" />
-            <Tab label="TASKS CHART" href="#basic-tabs"/>
+            <Tab label="TASKS CHART" />
           </Tabs>
         </AppBar>
 

@@ -23,7 +23,7 @@ class TaskChart extends Component {
       let startTime = store[i].start.match(/\d+/g);
       let startDay = startTime[0];
 
-      if(startDay == currentDay) lastDayTasks.push(store[i]);
+      if(+startDay === currentDay) lastDayTasks.push(store[i]);
     }
 
     lastDayTasks.forEach(task => { // TODO todo
@@ -39,19 +39,18 @@ class TaskChart extends Component {
       let endSecond = +endTime[5] / 60;
 
       if(startHour === endHour) {
-        console.log('test');
         hash[startHour].minutes += (endMinute - startMinute) + (endSecond - startSecond);
       }
 
       if(startHour + 1 === endHour) { // TODO черная магия :(
-        hash[startHour].minutes = hash[startHour].minutes + (60 - +startMinute) + (endSecond - startSecond);
+        hash[startHour].minutes += (60 - +startMinute) + (endSecond - startSecond);
         hash[endHour].minutes = endMinute + endSecond;
       }
 
       if(startHour + 1 < endHour) { // TODO черная магия :(
         let differenceHours = endHour - (startHour + 1); // TODO черная магия :(
 
-        hash[startHour].minutes = hash[startHour].minutes + (60 - +startMinute) ;
+        hash[startHour].minutes += (60 - +startMinute) ;
         hash[endHour].minutes = endMinute + endSecond;
 
         for (let i = 0; i < differenceHours; i++) {
@@ -65,8 +64,6 @@ class TaskChart extends Component {
 
   render() {
     let chartData = this.getChartData();
-    console.log('------------------------');
-    console.log(chartData);
     return (
       <BarChart width={1200} height={350} data={chartData} style={{ marginTop: 25 }}>
         <XAxis dataKey="hours" />
@@ -77,14 +74,11 @@ class TaskChart extends Component {
   }
 }
 
+
+
 export default connect(
   state => ({
     store: state
-  }),
-  dispatch => ({
-    onAddTask: (task) => {
-      dispatch({ type: 'ADD_TASK', payload: task})
-    }
   })
 )(TaskChart);
 

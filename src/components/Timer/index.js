@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import DialogAlert from '../DialogAlert'
 import './timer.css'
-
 
 let secondStorage        = localStorage.getItem('seconds');
 let minutesStorage       = localStorage.getItem('minutes');
@@ -13,14 +11,6 @@ let hoursStorage         = localStorage.getItem('hours');
 let isActiveStorage      = localStorage.getItem('isActive');
 let taskTitleStorage     = localStorage.getItem('taskTitle');
 let taskStartTimeStorage = localStorage.getItem('taskStartTime');
-
-function convertDate(date) {
-
-  return date.toLocaleDateString() + ' '
-  + date.getFullHours() + ":"
-  + date.getFullMinutes() + ":"
-  + date.getFullSeconds();
-}
 
 class Timer extends Component {
 
@@ -32,8 +22,7 @@ class Timer extends Component {
     minutes : minutesStorage ? minutesStorage : '00',
     hours   : hoursStorage  ? hoursStorage : '00',
 
-    // TODO Разедить Task и Timer ?
-    //taskList      : taskListStorage ? taskListStorage : [],
+    // TODO Разедить Task и Timer
     taskTitle     : taskTitleStorage ? taskTitleStorage : '',
     taskStartTime : taskStartTimeStorage ? taskStartTimeStorage : '',
     taskEndTime   : '',
@@ -189,11 +178,6 @@ class Timer extends Component {
     let task = this.createTask(this.state.taskTitle);
     this.props.onAddTask(task);
 
-
-    // this.state.taskList.push(task);
-    // let strData = JSON.stringify(this.state.taskList);
-    // localStorage.setItem('tasks', strData);
-
     localStorage.removeItem('seconds');
     localStorage.removeItem('minutes');
     localStorage.removeItem('hours');
@@ -214,8 +198,26 @@ class Timer extends Component {
 
     clearInterval(TimerID);
   };
+}
 
+function getFullSeconds(date) {
+  return date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+}
 
+function getFullMinutes(date) {
+  return date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+}
+
+function getFullHours(date) {
+  return date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+}
+
+function convertDate(date) {
+
+  return date.toLocaleDateString() + ' '
+    + getFullHours(date) + ":"
+    + getFullMinutes(date) + ":"
+    + getFullSeconds(date);
 }
 
 export default connect(

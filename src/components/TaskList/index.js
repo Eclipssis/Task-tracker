@@ -7,28 +7,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-
-
-
 import Button from '@material-ui/core/Button';
 import {connect} from "react-redux";
-//import Timer from '../Timer'
+import { Link } from 'react-router-dom'
+
 
 function formatTime(date) {
-
-  // console.log(date);
-  // let ms = Date.parse(date);
-  // console.log(ms);
-  // let newDate = new Date(ms);
-  // console.log(typeof newDate);
-  // console.log('------------------');
-
-  let time = date.match(/\d\d:\d\d:\d\d/);
-
-  return time
+  return date.match(/\d\d:\d\d:\d\d/);
 }
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     width: 1200,
     overflowX: 'auto',
@@ -40,19 +28,15 @@ const styles = theme => ({
   },
 });
 
-
-// let data = localStorage.getItem('tasks');
-// data = JSON.parse(data) ? JSON.parse(data) : this.props.taskList;
-
 class TaskList extends Component {
 
-  state = {
-
+  deleteTask = (id) => {
+    this.props.onDeleteTask(id);
   };
 
   render() {
     const { classes } = this.props;
-    const data = this.props.taskList;
+    const data = this.props.store;
 
     return (
       <Paper className={classes.root}>
@@ -80,18 +64,14 @@ class TaskList extends Component {
                   <TableCell>{formatTime(task.end)}</TableCell>
                   <TableCell>{task.timeSpend}</TableCell>
                   <TableCell>
-
-                    <Button variant="outlined" onClick={this.showTask}>
+                    <Button variant="outlined" component={Link} to={'/task/' + task.id}>
                       Info
                     </Button>
-
                   </TableCell>
                   <TableCell>
-
                     <Button variant="outlined" onClick={() => this.deleteTask(task.id)} >
                       Delete
                     </Button>
-
                   </TableCell>
                 </TableRow>
               );
@@ -101,22 +81,11 @@ class TaskList extends Component {
       </Paper>
     );
   }
-
-  showTask = (id) => {
-    console.log(id);
-  };
-
-  deleteTask = (id) => {
-    // console.log(this.props.taskList);
-    this.props.onDeleteTask(id);
-  };
-
 }
-
 
 export default withStyles(styles)(connect(
   state => ({
-    taskList: state
+    store: state
   }),
   dispatch => ({
     onDeleteTask: (id) => {
@@ -124,3 +93,5 @@ export default withStyles(styles)(connect(
     }
   })
 )(TaskList));
+
+
