@@ -14,6 +14,14 @@ let isActiveStorage      = localStorage.getItem('isActive');
 let taskTitleStorage     = localStorage.getItem('taskTitle');
 let taskStartTimeStorage = localStorage.getItem('taskStartTime');
 
+function convertDate(date) {
+
+  return date.toLocaleDateString() + ' '
+  + date.getFullHours() + ":"
+  + date.getFullMinutes() + ":"
+  + date.getFullSeconds();
+}
+
 class Timer extends Component {
 
   state = {
@@ -29,7 +37,7 @@ class Timer extends Component {
     taskTitle     : taskTitleStorage ? taskTitleStorage : '',
     taskStartTime : taskStartTimeStorage ? taskStartTimeStorage : '',
     taskEndTime   : '',
-    taskTime      : ''
+    taskDuration  : ''
   };
 
   componentWillMount() {
@@ -81,23 +89,26 @@ class Timer extends Component {
 
     let nextId = this.props.store.length > 0 ? this.props.store.length + 1 : 1;
 
+    let msStartTime = Date.parse(this.state.taskStartTime);
+    let startTime = new Date(msStartTime);
     let endTask = new Date();
-    let taskTime = Date.parse(endTask) - Date.parse(this.state.taskStartTime);
-    taskTime /= 1000;
 
-    let seconds = Math.round(taskTime % 60);
+    let taskDuration = Date.parse(endTask) - Date.parse(this.state.taskStartTime);
+    taskDuration /= 1000;
+
+    let seconds = Math.round(taskDuration % 60);
     if(seconds < 10) {
       seconds = '0' + seconds
     }
 
-    taskTime = Math.floor(taskTime / 60);
-    let minutes = Math.round(taskTime % 60);
+    taskDuration = Math.floor(taskDuration / 60);
+    let minutes = Math.round(taskDuration % 60);
     if(minutes < 10) {
       minutes = '0' + minutes
     }
 
-    taskTime = Math.floor(taskTime / 60);
-    let hours = Math.round(taskTime % 24);
+    taskDuration = Math.floor(taskDuration / 60);
+    let hours = Math.round(taskDuration % 24);
     if(hours < 10) {
       hours = '0' + hours
     }
@@ -107,9 +118,9 @@ class Timer extends Component {
     return {
       id: nextId,
       title: taskTitle,
-      start: this.state.taskStartTime,
-      end: endTask,
-      timeSpend: totalTimeSpend
+      start: convertDate(startTime),
+      end: convertDate(endTask),
+      timeSpend: totalTimeSpend,
     }
   };
 

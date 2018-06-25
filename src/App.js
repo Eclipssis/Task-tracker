@@ -14,6 +14,7 @@ Date.prototype.getFullHours = function () {
   return this.getHours() < 10 ? '0' + this.getHours() : this.getHours();
 };
 
+
 class App extends Component {
 
   render() {

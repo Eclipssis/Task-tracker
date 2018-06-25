@@ -16,10 +16,16 @@ import {connect} from "react-redux";
 
 function formatTime(date) {
 
-  let ms = Date.parse(date);
-  let newDate = new Date(ms);
+  // console.log(date);
+  // let ms = Date.parse(date);
+  // console.log(ms);
+  // let newDate = new Date(ms);
+  // console.log(typeof newDate);
+  // console.log('------------------');
 
-  return newDate.getFullHours() + ":" + newDate.getFullMinutes() + ":" + newDate.getFullSeconds()
+  let time = date.match(/\d\d:\d\d:\d\d/);
+
+  return time
 }
 
 const styles = theme => ({
