@@ -11,6 +11,7 @@ class App extends Component {
         <h1>Hello React!!!</h1>
         <Timer/>
         <TaskBlock />
+
       </div>
     );
   }

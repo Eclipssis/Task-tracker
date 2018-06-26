@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -36,7 +35,7 @@ class TaskList extends Component {
 
   render() {
     const { classes } = this.props;
-    const data = this.props.store;
+    const data = Object.values(this.props.store.tasks);
 
     return (
       <Paper className={classes.root}>
@@ -62,7 +61,7 @@ class TaskList extends Component {
                   <TableCell>{task.title}</TableCell>
                   <TableCell>{formatTime(task.start)}</TableCell>
                   <TableCell>{formatTime(task.end)}</TableCell>
-                  <TableCell>{task.timeSpend}</TableCell>
+                  <TableCell>{formatTime(task.timeSpend)}</TableCell>
                   <TableCell>
                     <Button variant="outlined" component={Link} to={'/task/' + task.id}>
                       Info

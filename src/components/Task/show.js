@@ -21,7 +21,6 @@ const TaskDetail = ({ task }) => {
     }
   };
 
-  // TODO почему 2 раза рендерит ?
   if(task) {
     return (
       <div>
@@ -50,7 +49,7 @@ const TaskDetail = ({ task }) => {
 
 const mapStateToProps = (state, ownProps) => {
 
-  let searchingTask = state.find(function (task) {
+  let searchingTask = Object.values(state.tasks).find(function (task) {
     return task.id === Number(ownProps.match.params.id);
   });
 

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import DialogAlert from '../DialogAlert'
+import convertDate from '../../services/convertDate'
 import './timer.css'
 
 let secondStorage        = localStorage.getItem('seconds');
@@ -75,8 +76,9 @@ class Timer extends Component {
 
   createTask = (taskTitle) => {
 
-
-    let nextId = this.props.store.length > 0 ? this.props.store.length + 1 : 1;
+    const storeLength = Object.values(this.props.store.tasks).length;
+    console.log(storeLength);
+    let nextId = storeLength > 0 ? storeLength + 1 : 1;
 
     let msStartTime = Date.parse(this.state.taskStartTime);
     let startTime = new Date(msStartTime);
@@ -198,26 +200,6 @@ class Timer extends Component {
 
     clearInterval(TimerID);
   };
-}
-
-function getFullSeconds(date) {
-  return date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-}
-
-function getFullMinutes(date) {
-  return date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-}
-
-function getFullHours(date) {
-  return date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-}
-
-function convertDate(date) {
-
-  return date.toLocaleDateString() + ' '
-    + getFullHours(date) + ":"
-    + getFullMinutes(date) + ":"
-    + getFullSeconds(date);
 }
 
 export default connect(
