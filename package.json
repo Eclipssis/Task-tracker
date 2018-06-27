@@ -1,7 +1,7 @@
 {
   "name": "task-tracker",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "homepage": "https://Eclipssis.github.io/Task-tracker/",
   "dependencies": {
     "@material-ui/core": "^1.2.2",
