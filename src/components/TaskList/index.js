@@ -61,7 +61,7 @@ class TaskList extends Component {
                   <TableCell>{task.title}</TableCell>
                   <TableCell>{formatTime(task.start)}</TableCell>
                   <TableCell>{formatTime(task.end)}</TableCell>
-                  <TableCell>{formatTime(task.timeSpend)}</TableCell>
+                  <TableCell>{task.timeSpend}</TableCell>
                   <TableCell>
                     <Button variant="outlined" component={Link} to={'/task/' + task.id}>
                       Info

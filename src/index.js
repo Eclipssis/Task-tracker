@@ -2,10 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux';
-import App from './App';
+import App from './components/App/App';
 import TaskDetail from "./components/Task/show";
 import PageNotFound from './components/PageNotFound'
-import TaskList from "./components/TaskList";
 import reducer from './reducers'
 
 import { Router, Route, Switch } from 'react-router-dom'
@@ -22,7 +21,6 @@ ReactDOM.render(
       <Switch>
         <Route path={'/'} exact component={App} />
         <Route path={'/task/:id'} component={TaskDetail} />
-        <Route path={'/log'} component={TaskList} />
         <Route component={PageNotFound} />
       </Switch>
     </Router>
