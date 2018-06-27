@@ -7,12 +7,12 @@ const initialState = {
 
 export default function taskReducer(state = initialState, action) {
   if(action.type === "ADD_TASK") {
+    state = Object.values(state);
 
     // Add task to localStorage
     localStorage.setItem('tasks', JSON.stringify([ ...state, action.payload ]) );
 
     // Add task to store
-    state = Object.values(state);
     return [ ...state, action.payload ]
   }
 
