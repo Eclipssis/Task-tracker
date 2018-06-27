@@ -1,8 +1,8 @@
 {
   "name": "task-tracker",
   "version": "0.1.0",
-  "private": true,
-  "homepage": "https://Eclipssis.github.io/Task-tracker/",
+  "private": false,
+  "homepage": "https://eclipssis.github.io/tracker-pages/",
   "dependencies": {
     "@material-ui/core": "^1.2.2",
     "gh-pages": "^1.2.0",
