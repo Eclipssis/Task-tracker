@@ -103,8 +103,6 @@ class Timer extends Component {
     let timerID = setInterval(() => {
 
       let seconds = formatToDisplay(+this.state.seconds + 1);
-      localStorage.setItem('seconds', seconds);
-
       this.setState({
         seconds: seconds
       });
@@ -112,8 +110,6 @@ class Timer extends Component {
       if(+this.state.seconds > 59) {
 
         let minutes = formatToDisplay(+this.state.minutes + 1);
-        localStorage.setItem('minutes', minutes);
-
         this.setState({
           seconds: '00',
           minutes: minutes
@@ -123,8 +119,6 @@ class Timer extends Component {
       if(+this.state.minutes > 59) {
 
         let hours = formatToDisplay(+this.state.hours + 1);
-        localStorage.setItem('minutes', hours);
-
         this.setState({
           minutes: '00',
           hours: hours
