@@ -25,7 +25,6 @@ export default function taskReducer(state = initialState, action) {
 
       localStorage.removeItem('tasks');
       localStorage.setItem('tasks', JSON.stringify(newTaskArray));
-
       return newTaskArray;
 
     default:

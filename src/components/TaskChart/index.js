@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import generateTask from "../../actions/Task/generate";
 
-const MIN_IN_HOUR = 60;
+const HOUR = 60;
 
 const style = {
   buttonWrap: {
@@ -20,20 +20,22 @@ class TaskChart extends Component {
     if(start.hour === end.hour) {
       hash[start.hour].minutes += (end.minutes - start.minutes) + (end.seconds - start.seconds);
     } else {
+
       for (let i = start.hour; i < end.hour; i++) {
+
         switch (i) {
           case start.hour:
-            hash[start.hour].minutes += (MIN_IN_HOUR - +start.minutes);
+            hash[start.hour].minutes += (HOUR - +start.minutes);
             hash[end.hour].minutes = end.minutes + end.seconds;
             break;
 
           case end.hour:
-            hash[start.hour].minutes += (MIN_IN_HOUR - +start.minutes);
+            hash[start.hour].minutes += (HOUR - +start.minutes);
             hash[end.hour].minutes = end.minutes + end.seconds;
             break;
 
           default:
-            hash[start.hour + i].minutes = MIN_IN_HOUR;
+            hash[start.hour + i].minutes = HOUR;
         }
       }
     }
