@@ -3,17 +3,11 @@ import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableHead from '@material-ui/core/TableHead';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
 import {connect} from "react-redux";
-import { Link } from 'react-router-dom'
-
-
-function formatTime(date) {
-  return date.match(/\d\d:\d\d:\d\d/);
-}
+import TaskRow from "../TaskRow";
 
 const styles = () => ({
   root: {
@@ -35,7 +29,7 @@ class TaskList extends Component {
 
   render() {
     const { classes } = this.props;
-    const data = Object.values(this.props.store.tasks);
+    const data = this.props.store.tasks;
 
     return (
       <Paper className={classes.root}>
@@ -54,25 +48,7 @@ class TaskList extends Component {
           <TableBody>
             {data.map((task, index) => {
               return (
-                <TableRow key={index}>
-                  <TableCell component="th" scope="row">
-                    {task.id}
-                  </TableCell>
-                  <TableCell>{task.title}</TableCell>
-                  <TableCell>{formatTime(task.start)}</TableCell>
-                  <TableCell>{formatTime(task.end)}</TableCell>
-                  <TableCell>{task.timeSpend}</TableCell>
-                  <TableCell>
-                    <Button variant="outlined" component={Link} to={'/task/' + task.id}>
-                      Info
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="outlined" onClick={() => this.deleteTask(task.id)} >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                <TaskRow task={task} index={index} key={index} />
               );
             })}
           </TableBody>
@@ -85,11 +61,6 @@ class TaskList extends Component {
 export default withStyles(styles)(connect(
   state => ({
     store: state
-  }),
-  dispatch => ({
-    onDeleteTask: (id) => {
-      dispatch({ type: 'DELETE_TASK', payload: id})
-    }
   })
 )(TaskList));
 

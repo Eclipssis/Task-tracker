@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import DialogAlert from '../DialogAlert'
 import getTimeDifference from '../../helpers/getTimeDifference'
 import formatToDisplay from '../../helpers/formatToDisplay'
 import createTask from '../../helpers/createTask'
-import './timer.css'
+import onAddTask from '../../actions/Task/add'
+import './index.css'
 
 class Timer extends Component {
 
@@ -14,9 +16,7 @@ class Timer extends Component {
     isActive : false,
     timerID  : null,
 
-    seconds : '00',
-    minutes : '00',
-    hours   : '00',
+    time : '00:00:00',
 
     taskTitle     : '',
     taskStartTime : '',
@@ -27,20 +27,24 @@ class Timer extends Component {
     let isActiveTimer = JSON.parse(localStorage.getItem('isActive'));
 
     if(isActiveTimer === true) {
-      this.startTimer();
 
-      let startTask = localStorage.getItem('taskStartTime');
-      let timeStart = new Date(Date.parse(startTask));
+      let timeStart = new Date(Date.parse(localStorage.getItem('taskStartTime')));
       let timeNow   = new Date();
-      let timeDiff  = getTimeDifference(timeStart, timeNow);
+
+      let time  = getTimeDifference(timeStart, timeNow);
+
+      time = formatToDisplay(time.hours) + ':'
+               + formatToDisplay(time.minutes) + ':'
+               + formatToDisplay(time.seconds);
 
       this.setState({
-        seconds:   formatToDisplay(timeDiff.seconds),
-        minutes:   formatToDisplay(timeDiff.minutes),
-        hours:     formatToDisplay(timeDiff.hours),
+        time:   time,
         taskTitle: localStorage.getItem('taskTitle'),
-        isActive: isActiveTimer
-      })
+        isActive: isActiveTimer,
+        taskStartTime: timeStart
+      });
+
+      this.startTimer();
     }
   }
 
@@ -61,11 +65,7 @@ class Timer extends Component {
           value={this.state.taskTitle}
           onChange={this.changeTaskTitle}
         />
-        <div className="timer__body">
-          {this.state.hours}:
-          {this.state.minutes}:
-          {this.state.seconds}
-        </div>
+        <div className="timer__body">{this.state.time}</div>
 
         {this.state.isActive ?
           <Button variant="outlined" onClick={this.stopTimer}>Stop</Button>
@@ -102,28 +102,16 @@ class Timer extends Component {
 
     let timerID = setInterval(() => {
 
-      let seconds = formatToDisplay(+this.state.seconds + 1);
+      let time = getTimeDifference(this.state.taskStartTime, new Date());
+
+      time = formatToDisplay(time.hours) + ':'
+           + formatToDisplay(time.minutes) + ':'
+           + formatToDisplay(time.seconds);
+
+
       this.setState({
-        seconds: seconds
+        time: time
       });
-
-      if(+this.state.seconds > 59) {
-
-        let minutes = formatToDisplay(+this.state.minutes + 1);
-        this.setState({
-          seconds: '00',
-          minutes: minutes
-        })
-      }
-
-      if(+this.state.minutes > 59) {
-
-        let hours = formatToDisplay(+this.state.hours + 1);
-        this.setState({
-          minutes: '00',
-          hours: hours
-        })
-      }
 
     }, 1000);
 
@@ -133,7 +121,7 @@ class Timer extends Component {
 
   stopTimer = () => {
 
-    const storeLength = Object.values(this.props.store.tasks).length;
+    const storeLength = this.props.store.tasks.length;
 
     let nextId = storeLength > 0 ? storeLength + 1 : 1;
     let taskTitle = this.state.taskTitle;
@@ -145,9 +133,7 @@ class Timer extends Component {
 
     this.setState({
       isActive: false,
-      seconds: '00',
-      minutes: '00',
-      hours: '00',
+      time: '00:00:00',
       taskTitle: ''
     });
 
@@ -161,13 +147,13 @@ class Timer extends Component {
   };
 }
 
+function matchDispatchToProps(dispatch) {
+  return bindActionCreators({onAddTask: onAddTask}, dispatch)
+}
+
 export default connect(
   state => ({
     store: state
   }),
-  dispatch => ({
-    onAddTask: (task) => {
-      dispatch({ type: 'ADD_TASK', payload: task})
-    }
-  })
+  matchDispatchToProps
 )(Timer);
