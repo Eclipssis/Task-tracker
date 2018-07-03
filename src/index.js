@@ -7,15 +7,12 @@ import TaskDetail from "./components/Task/index";
 import PageNotFound from './components/PageNotFound'
 import reducer from './reducers'
 import { HashRouter, Route, Switch } from 'react-router-dom'
-//import createBrowserHistory from 'history/createBrowserHistory'
-
-//let history = createBrowserHistory();
 
 const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 ReactDOM.render(
   <Provider store={store}>
-    <HashRouter >
+    <HashRouter>
       <Switch>
         <Route path={'/'} exact component={App} />
         <Route path={'/task_log'} exact component={App} />

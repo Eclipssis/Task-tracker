@@ -1,4 +1,5 @@
 import createTask from "../../helpers/createTask";
+import { GENERATE_TASKS } from '../actionsTypes'
 
 function randomDate(starHour, endHour, starMinutes, endMinutes) {
 
@@ -31,7 +32,7 @@ export default function generateTask() {
   }
 
   return {
-    type: 'GENERATE_TASKS',
+    type: GENERATE_TASKS,
     payload: dummyData
   }
 }

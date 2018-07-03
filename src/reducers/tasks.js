@@ -1,3 +1,7 @@
+import { GENERATE_TASKS } from '../actions/actionsTypes'
+import { DELETE_TASK } from '../actions/actionsTypes'
+import { ADD_TASK } from '../actions/actionsTypes'
+
 let taskList = localStorage.getItem('tasks');
 taskList = JSON.parse(taskList) ? JSON.parse(taskList) : [];
 
@@ -7,16 +11,16 @@ export default function taskReducer(state = initialState, action) {
 
   switch (action.type) {
 
-    case "ADD_TASK":
+    case ADD_TASK:
       localStorage.setItem('tasks', JSON.stringify([ ...state, action.payload ]) );
       return [ ...state, action.payload ];
 
-    case "GENERATE_TASKS":
+    case GENERATE_TASKS:
       localStorage.removeItem('tasks');
       localStorage.setItem('tasks', JSON.stringify(action.payload));
       return action.payload;
 
-    case "DELETE_TASK":
+    case DELETE_TASK:
       let taskId = action.payload;
 
       let newTaskArray = state.filter(function (task) {
