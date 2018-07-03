@@ -49,7 +49,7 @@ const TaskDetail = ({ task }) => {
 
 const mapStateToProps = (state, ownProps) => {
 
-  let searchingTask = Object.values(state.tasks).find(function (task) {
+  let searchingTask = state.tasks.find(function (task) {
     return task.id === Number(ownProps.match.params.id);
   });
 

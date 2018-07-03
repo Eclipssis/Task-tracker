@@ -2,14 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux';
-import App from './components/App/App';
-import TaskDetail from "./components/Task/show";
+import App from './components/App';
+import TaskDetail from "./components/Task/index";
 import PageNotFound from './components/PageNotFound'
 import reducer from './reducers'
-
 import { Router, Route, Switch } from 'react-router-dom'
-import createBrowserHistory from 'react-router/node_modules/history/createBrowserHistory'
-
+import createBrowserHistory from 'history/createBrowserHistory'
 
 let history = createBrowserHistory();
 
@@ -20,6 +18,8 @@ ReactDOM.render(
     <Router history={history}>
       <Switch>
         <Route path={'/'} exact component={App} />
+        <Route path={'/task_log'} exact component={App} />
+        <Route path={'/task_chart'} exact component={App} />
         <Route path={'/task/:id'} component={TaskDetail} />
         <Route component={PageNotFound} />
       </Switch>
