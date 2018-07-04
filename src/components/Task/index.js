@@ -23,7 +23,6 @@ const style = {
 };
 
 const TaskDetail = ({ task }) => {
-
   if(task) {
     return (
       <Paper className={'task-paper'} >

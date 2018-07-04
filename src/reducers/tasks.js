@@ -5,9 +5,11 @@ import { ADD_TASK } from '../actions/actionsTypes'
 let taskList = localStorage.getItem('tasks');
 taskList = JSON.parse(taskList) ? JSON.parse(taskList) : [];
 
-const initialState = [...taskList];
+const initialState = {
+  taskList: [...taskList]
+};
 
-export default function taskReducer(state = initialState, action) {
+export default function taskReducer(state = initialState.taskList, action) {
 
   switch (action.type) {
 
@@ -21,15 +23,17 @@ export default function taskReducer(state = initialState, action) {
       return action.payload;
 
     case DELETE_TASK:
-      let taskId = action.payload;
 
-      let newTaskArray = state.filter(function (task) {
-        return taskId !== task.id;
+      const newState = Object.assign([], state);
+      const indexOfTaskToDelete = state.findIndex(task => {
+        return task.id === action.payload
       });
 
+      newState.splice(indexOfTaskToDelete, 1);
       localStorage.removeItem('tasks');
-      localStorage.setItem('tasks', JSON.stringify(newTaskArray));
-      return newTaskArray;
+      localStorage.setItem('tasks', JSON.stringify(newState));
+
+      return newState;
 
     default:
       return state

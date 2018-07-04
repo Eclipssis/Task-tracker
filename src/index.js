@@ -15,8 +15,6 @@ ReactDOM.render(
     <HashRouter>
       <Switch>
         <Route path={'/'} exact component={App} />
-        <Route path={'/task_log'} exact component={App} />
-        <Route path={'/task_chart'} exact component={App} />
         <Route path={'/task/:id'} component={TaskDetail} />
         <Route component={PageNotFound} />
       </Switch>

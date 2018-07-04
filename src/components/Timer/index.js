@@ -48,34 +48,6 @@ class Timer extends Component {
     }
   }
 
-  render() {
-
-    return (
-      <div className="timer">
-        <DialogAlert
-          ref="dialog"
-          dialogTitle='Empty task name'
-          dialogText='You are trying close your task without name, enter the title and try again'
-          classesName='dialog-title-red'
-        />
-        <TextField
-          label="Name of your task"
-          fullWidth={true}
-          margin="normal"
-          value={this.state.taskTitle}
-          onChange={this.changeTaskTitle}
-        />
-        <div className="timer__body">{this.state.time}</div>
-
-        {this.state.isActive ?
-          <Button variant="outlined" onClick={this.stopTimer}>Stop</Button>
-          :
-          <Button variant="outlined" onClick={this.activateTimer}>Start</Button>
-        }
-      </div>
-    );
-  }
-
   changeTaskTitle = (event) => {
     this.setState({taskTitle: event.target.value})
   };
@@ -145,6 +117,34 @@ class Timer extends Component {
 
     clearInterval(TimerID);
   };
+
+  render() {
+
+    return (
+      <div className="timer">
+        <DialogAlert
+          ref="dialog"
+          dialogTitle='Empty task name'
+          dialogText='You are trying close your task without name, enter the title and try again'
+          classesName='dialog-title-red'
+        />
+        <TextField
+          label="Name of your task"
+          fullWidth={true}
+          margin="normal"
+          value={this.state.taskTitle}
+          onChange={this.changeTaskTitle}
+        />
+        <div className="timer__body">{this.state.time}</div>
+
+        {this.state.isActive ?
+          <Button variant="outlined" onClick={this.stopTimer}>Stop</Button>
+          :
+          <Button variant="outlined" onClick={this.activateTimer}>Start</Button>
+        }
+      </div>
+    );
+  }
 }
 
 function matchDispatchToProps(dispatch) {
