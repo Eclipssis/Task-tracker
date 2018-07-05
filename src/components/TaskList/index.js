@@ -29,7 +29,7 @@ class TaskList extends Component {
 
   render() {
     const { classes } = this.props;
-    const data = this.props.store.tasks;
+    const data = this.props.tasksList;
 
     return (
       <Paper className={classes.root}>
@@ -58,10 +58,15 @@ class TaskList extends Component {
   }
 }
 
+function mapStateToProps(state) {
+  //console.log('TASK LIST STATE: ' , state);
+  return {
+    tasksList: state.tasks.taskList
+  }
+}
+
 export default withStyles(styles)(connect(
-  state => ({
-    store: state
-  })
+  mapStateToProps
 )(TaskList));
 
 

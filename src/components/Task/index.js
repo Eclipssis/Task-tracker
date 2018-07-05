@@ -23,6 +23,7 @@ const style = {
 };
 
 const TaskDetail = ({ task }) => {
+
   if(task) {
     return (
       <Paper className={'task-paper'} >
@@ -61,7 +62,7 @@ const TaskDetail = ({ task }) => {
 
 const mapStateToProps = (state, ownProps) => {
 
-  let searchingTask = state.tasks.find(function (task) {
+  let searchingTask = state.tasks.taskList.find(function (task) {
     return task.id === Number(ownProps.match.params.id);
   });
 

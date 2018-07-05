@@ -44,7 +44,7 @@ class TaskChart extends Component {
   getChartData = () => {
     let hash = [];
     let lastDayTasks = [];
-    let store = this.props.store.tasks;
+    let store = this.props.tasksList;
     let currentDay = new Date().getDate();
 
     // Create empty chart data
@@ -112,10 +112,14 @@ function matchDispatchToProps(dispatch) {
   return bindActionCreators({generateTask: generateTask}, dispatch)
 }
 
+function mapStateToProps(state) {
+  return {
+    tasksList: state.tasks.taskList
+  }
+}
+
 export default connect(
-  state => ({
-    store: state
-  }),
+  mapStateToProps,
   matchDispatchToProps
 )(TaskChart);
 

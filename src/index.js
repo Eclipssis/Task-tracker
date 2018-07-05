@@ -14,8 +14,8 @@ ReactDOM.render(
   <Provider store={store}>
     <HashRouter>
       <Switch>
-        <Route path={'/'} exact component={App} />
         <Route path={'/task/:id'} component={TaskDetail} />
+        <Route path={'/'}  component={App} />
         <Route component={PageNotFound} />
       </Switch>
     </HashRouter>

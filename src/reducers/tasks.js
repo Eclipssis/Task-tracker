@@ -6,34 +6,44 @@ let taskList = localStorage.getItem('tasks');
 taskList = JSON.parse(taskList) ? JSON.parse(taskList) : [];
 
 const initialState = {
-  taskList: [...taskList]
+  taskList: taskList
 };
 
-export default function taskReducer(state = initialState.taskList, action) {
+export default function taskReducer(state = initialState, action) {
 
   switch (action.type) {
 
     case ADD_TASK:
-      localStorage.setItem('tasks', JSON.stringify([ ...state, action.payload ]) );
-      return [ ...state, action.payload ];
+      localStorage.setItem('tasks', JSON.stringify([ ...state.taskList, action.payload ]) );
+      return {
+        ...state,
+        taskList: [...state.taskList, action.payload]
+      };
 
     case GENERATE_TASKS:
       localStorage.removeItem('tasks');
       localStorage.setItem('tasks', JSON.stringify(action.payload));
-      return action.payload;
+      return {
+        ...state,
+        taskList: action.payload
+      };
 
     case DELETE_TASK:
 
-      const newState = Object.assign([], state);
-      const indexOfTaskToDelete = state.findIndex(task => {
+      const newState = Object.assign([], state.taskList);
+      const indexOfTaskToDelete = state.taskList.findIndex(task => {
         return task.id === action.payload
       });
 
       newState.splice(indexOfTaskToDelete, 1);
+
       localStorage.removeItem('tasks');
       localStorage.setItem('tasks', JSON.stringify(newState));
 
-      return newState;
+      return {
+        ...state,
+        taskList: newState
+      };
 
     default:
       return state

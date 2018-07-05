@@ -93,7 +93,7 @@ class Timer extends Component {
 
   stopTimer = () => {
 
-    const storeLength = this.props.store.tasks.length;
+    const storeLength = this.props.tasksLength;
 
     let nextId = storeLength > 0 ? storeLength + 1 : 1;
     let taskTitle = this.state.taskTitle;
@@ -151,9 +151,14 @@ function matchDispatchToProps(dispatch) {
   return bindActionCreators({onAddTask: onAddTask}, dispatch)
 }
 
+function mapStateToProps(state) {
+  console.log(state);
+  return {
+    tasksLength: state.tasks.taskList.length
+  }
+}
+
 export default connect(
-  state => ({
-    store: state
-  }),
+  mapStateToProps,
   matchDispatchToProps
 )(Timer);
